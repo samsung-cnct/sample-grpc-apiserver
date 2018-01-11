@@ -16,6 +16,7 @@ service HelloService {
 * Knock the door or not
 */
 message Knock {
+    reserved 2;
     bool knockDoor = 1; // do you or not knock on the door
 }
 
@@ -23,6 +24,7 @@ message Knock {
 * Reply based on whether a door was knocked or not.
 */
 message Reply {
+    reserved 3;
     bool reply = 1; // do you or not reply to a knock.
     string replyMessage = 2; // what your reply to a knock should be.
 }
