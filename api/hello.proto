@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package hello;
+
+service HelloService {
+
+    /**
+    * Determines if you knocked the door and the appropriate
+    * reply if you didnt.
+    */
+    rpc GetHello(Knock) returns (Reply){}
+
+}
+
+/**
+* Knock the door or not
+*/
+message Knock {
+    bool knockDoor = 1; // do you or not knock on the door
+}
+
+/**
+* Reply based on whether a door was knocked or not.
+*/
+message Reply {
+    bool reply = 1; // do you or not reply to a knock.
+    string replyMessage = 2; // what your reply to a knock should be.
+}
