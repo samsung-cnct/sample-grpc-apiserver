@@ -27,8 +27,8 @@ init-test:
   stage: test
   only:
     - branches
-  except:
-    - master
+  # except:
+  #   - master
   script:
     - echo "Hello World"
 
