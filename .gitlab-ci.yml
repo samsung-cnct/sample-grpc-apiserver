@@ -2,6 +2,10 @@
 - "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
 - "export CHART_VER=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
 - "export CHART_REL=$(git rev-list --count v${CHART_VER}..HEAD 2>/dev/null )"
+
+before_script:
+  - docker info
+
 "build":
   "artifacts":
     "paths":
@@ -11,8 +15,14 @@
   - "go get -u github.com/golang/protobuf/protoc-gen-go"
   - "protoc -I api/ api/hello.proto --go_out=plugins=grpc:api"
   - "go build"
-  - "docker build rootfs/example_grpc" - t $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION"
   "stage": "build"
+
+"build_image":
+  script:
+    - docker build -t $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" .
+#    - docker run my-docker-image /script/to/run/tests
+    "stage": "build image"
+
 "deploy-staging":
   "before_script":
   - "mkdir /root/.kube"
