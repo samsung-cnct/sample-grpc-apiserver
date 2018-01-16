@@ -5,7 +5,7 @@
 - docker info
 
 "build":
-  "image": golang:1.9
+  "image": "golang:1.9"
   "artifacts":
     "paths":
     - "${CHART_NAME}"
