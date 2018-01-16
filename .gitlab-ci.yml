@@ -20,8 +20,8 @@ before_script:
 "build_image":
   script:
     - docker build -t $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" .
-#    - docker run my-docker-image /script/to/run/tests
-    "stage": "build image"
+#   - docker run my-docker-image /script/to/run/tests
+#    "stage": "build image"
 
 "deploy-staging":
   "before_script":
