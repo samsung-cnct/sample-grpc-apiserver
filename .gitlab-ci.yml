@@ -4,8 +4,6 @@
 - "export CHART_REL=$(git rev-list --count v${CHART_VER}..HEAD 2>/dev/null )"
 - docker info
 
-"stage": "build"
-
 "build":
   "image": "golang:1.9"
   "artifacts":
