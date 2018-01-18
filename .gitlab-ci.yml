@@ -72,8 +72,8 @@
   script:
 #    - "cp ./server rootfs/grpc_server/server"
 #    - "cp ./client rootfs/grpc_server/client"
-    - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
-    - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
+    - docker build -t "$REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION" rootfs/grpc_server
+    - docker push $REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION
 
 
 "publish-beta":
