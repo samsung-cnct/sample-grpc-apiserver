@@ -99,7 +99,7 @@ services:
 - "publish"
 - "deploy"
 - "github-status-update"
-"test":
+
   "before_script":
   - "mkdir /root/.kube"
   - "echo ${TEST_KUBECONFIG} | base64 -d > /root/.kube/config"
