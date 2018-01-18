@@ -38,7 +38,7 @@
   "only":
   - "master"
   "dependencies": 
-  - docker_images
+  - "docker_images"
   "script":
   - "cd ${APP_NAME}"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
@@ -61,7 +61,7 @@
 "stages":
 - "build"
 - "docker_images"
-- "helm_publish"
+- "publish"
 - "deploy"
 - "github-status-update"
 
