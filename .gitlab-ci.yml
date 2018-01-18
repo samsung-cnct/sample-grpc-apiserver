@@ -31,16 +31,13 @@
   - docker info
   - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
   script:
-#    - "cp ./server rootfs/grpc_server/server"
-#    - "cp ./client rootfs/grpc_server/client"
     - docker build -t "$REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION" rootfs/grpc_server
     - docker push $REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION
-
 
 "publish_helm":
   "only":
   - "master"
-  dependencies: 
+  "dependencies": 
   - publish_image
   "script":
   - "cd ${APP_NAME}"
@@ -60,6 +57,7 @@
   "tags":
   - "failfast-ci"
   "when": "always"
+  
 "stages":
 - "build"
 - "test"
