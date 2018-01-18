@@ -46,14 +46,16 @@
   - "master"
   "dependencies": 
   - "build_image"
+  "image":
+  - $HELM_REGISTRY_IMAGE
   "script":
   - "cd charts/grpc_server"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
   "stage": "helm"
   
 "lint_helm":
-  "only":
-  - "master"
+  "image":
+  - $HELM_REGISTRY_IMAGE
   "script":
   - "cd charts/grpc_server"
   - "helm lint"
@@ -120,5 +122,5 @@
   "SHA": "f53efd52a424af41c725dddbd8db187c89dd5b8c"
   "SHA8": "f53efd52"
   "SOURCE_REF": "master"
-  DOCKER_HOST: tcp://localhost:2375
-  DOCKER_DRIVER: overlay2
+  "DOCKER_HOST": tcp://localhost:2375
+  "DOCKER_DRIVER": overlay2
