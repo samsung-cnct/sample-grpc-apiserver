@@ -59,10 +59,11 @@ services:
 "image": "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION"
 
 "publish_image":
+  "stage": "publish"
   script:
     - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
     - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
-#    "stage": "build image"
+
 
 "publish-beta":
   "only":
