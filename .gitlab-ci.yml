@@ -20,8 +20,8 @@
   "artifacts":
     untracked: true
 
-"publish_image":
-  "stage": "publish"
+"build_image":
+  "stage": "build"
   services:
   - docker:dind
   dependencies: 
