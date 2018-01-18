@@ -121,7 +121,7 @@ services:
 #  "variables":
 #    "DEPLOYMENT": "${APP_NAME}-${CI_PIPELINE_ID}-${APP_NAME}"
 #    "NAMESPACE": "${APP_NAME}-test-${CI_PIPELINE_ID}"
-    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
+#    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
 "variables":
   "PROTOC_VERSION": "3.5.1"
   "APP_NAME": "grpc-example"
