@@ -21,7 +21,7 @@
     untracked: true
     
 "unit-tests":
-  stage": "build"
+  "stage": "build"
   "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
   "script":
   - "go test server/*test.go"
@@ -49,6 +49,14 @@
   "script":
   - "cd charts/${APP_NAME}"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
+  "stage": "publish"
+  
+"lint_helm":
+  "only":
+  - "master"
+  "script":
+  - "cd charts/${APP_NAME}"
+  - "helm lint"
   "stage": "publish"
 
 "report-status":
