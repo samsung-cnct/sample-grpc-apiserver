@@ -9,7 +9,7 @@ services:
 #- docker info
 
 "build":
-  "image": "znly/protoc"
+  "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
   "artifacts":
     "paths":
     - "${CHART_NAME}"
