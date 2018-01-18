@@ -17,8 +17,8 @@ services:
   - "go get -u google.golang.org/grpc"
   - "go get -u github.com/golang/protobuf/protoc-gen-go"
   - "protoc -I api/ api/hello.proto --go_out=plugins=grpc:api"
-  - go build -o rootfs/grpc_server/server ./server"
-  - go build -o rootfs/grpc_server/client ./client"
+  - "go build -o rootfs/grpc_server/server ./server"
+  - "go build -o rootfs/grpc_server/client ./client"
 
 "build_image":
   script:
