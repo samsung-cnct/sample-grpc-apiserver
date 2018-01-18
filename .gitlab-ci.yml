@@ -17,6 +17,9 @@
   - "protoc -I api/ api/hello.proto --go_out=plugins=grpc:api"
   - "go build -o rootfs/grpc_server/server ./server"
   - "go build -o rootfs/grpc_server/client ./client"
+  "artifacts":
+    untracked: true
+  
 
 
 "deploy-staging":
@@ -60,11 +63,15 @@
   "stage": "publish"
   services:
   - docker:dind
+  dependencies: 
+  - build
   image: docker:latest
   before_script:
   - docker info
   - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
   script:
+#    - "cp ./server rootfs/grpc_server/server"
+#    - "cp ./client rootfs/grpc_server/client"
     - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
     - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
 
