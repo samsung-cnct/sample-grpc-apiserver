@@ -25,6 +25,7 @@ services:
 #   - docker run my-docker-image /script/to/run/tests
 #    "stage": "build image"
 
+
 "deploy-staging":
   "before_script":
   - "mkdir /root/.kube"
