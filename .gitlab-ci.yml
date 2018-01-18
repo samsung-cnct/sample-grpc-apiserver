@@ -19,6 +19,13 @@
   - "go build -o rootfs/grpc_server/client ./client"
   "artifacts":
     untracked: true
+    
+"unit-tests":
+  stage": "build"
+  "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
+  "script":
+  - "go test server/*test.go"
+  - "go test client/*test.go"
 
 "build_image":
   "stage": "docker_images"
@@ -40,7 +47,7 @@
   "dependencies": 
   - "build_image"
   "script":
-  - "cd ${APP_NAME}"
+  - "cd charts/${APP_NAME}"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
   "stage": "publish"
 
