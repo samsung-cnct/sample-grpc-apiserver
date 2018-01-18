@@ -20,12 +20,6 @@ services:
   - "go build -o rootfs/grpc_server/server ./server"
   - "go build -o rootfs/grpc_server/client ./client"
 
-"build_image":
-  script:
-    - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
-    - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
-#    "stage": "build image"
-
 
 "deploy-staging":
   "before_script":
@@ -63,6 +57,13 @@ services:
     "GEN_STATEFULSET_NAME": "${APP_NAME}-${APP_NAME}"
     "NAMESPACE": "${APP_NAME}-staging"
 "image": "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION"
+
+"publish_image":
+  script:
+    - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
+    - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
+#    "stage": "build image"
+
 "publish-beta":
   "only":
   - "master"
