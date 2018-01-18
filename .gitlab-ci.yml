@@ -21,7 +21,7 @@
     untracked: true
 
 "build_image":
-  "stage": "build"
+  "stage": "docker_images"
   services:
   - docker:dind
   dependencies: 
@@ -38,7 +38,7 @@
   "only":
   - "master"
   "dependencies": 
-  - publish_image
+  - helm_publish
   "script":
   - "cd ${APP_NAME}"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
@@ -60,8 +60,8 @@
   
 "stages":
 - "build"
-- "test"
-- "publish"
+- "docker_images"
+- "helm_publish"
 - "deploy"
 - "github-status-update"
 
