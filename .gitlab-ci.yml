@@ -9,6 +9,7 @@ services:
 #- docker info
 
 "build":
+  "stage": build
   "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
   "artifacts":
     "paths":
@@ -94,7 +95,6 @@ services:
   "when": "always"
 "stages":
 - "build"
-- "test"
 - "publish"
 - "deploy"
 - "github-status-update"
