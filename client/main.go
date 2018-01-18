@@ -20,7 +20,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -39,7 +38,7 @@ var (
 
 
 func main() {
-	fmt.Println("Client starting")
+	log.Println("Client starting")
 	
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
