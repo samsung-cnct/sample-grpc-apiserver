@@ -38,7 +38,7 @@
   "only":
   - "master"
   "dependencies": 
-  - "docker_images"
+  - "build_image"
   "script":
   - "cd ${APP_NAME}"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
