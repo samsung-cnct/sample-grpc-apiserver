@@ -5,7 +5,7 @@ import (
     "flag"
     "log"
 
-    a "github.com/alejandroEsc/grpc-example/api"
+    a "../api"
     "google.golang.org/grpc"
     "context"
 )

@@ -10,7 +10,7 @@ import (
     "syscall"
     "time"
 
-	a "github.com/alejandroEsc/grpc-example/api"
+	a "../api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
