@@ -1,9 +1,10 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net"
-	"fmt"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -11,8 +12,8 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	port = ":5300"
+var (
+  serverPort = flag.String("server_port", ":5300", "Server port")
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -29,7 +30,7 @@ func (s *server) GetPoseidonAgain(ctx context.Context, in *pb.HelloPoseidon) (*p
 
 func main() {
 	fmt.Println("Server starting")
-	lis, err := net.Listen("tcp", port)
+	lis, err := net.Listen("tcp", *serverPort)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

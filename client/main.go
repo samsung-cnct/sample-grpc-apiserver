@@ -19,25 +19,30 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
-	"fmt"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
 )
 
-const (
-	address     = "0.0.0.0:5300"
-	defaultName = "trident"
+var (
+  serverAddr = flag.String("server_addr", "localhost:5300", "The server address in the format of host:port")
 )
+
+var (
+  defaultName = flag.String("default_name", "trident", "Default service name")
+)
+
 
 func main() {
 	fmt.Println("Client starting")
 	
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -45,7 +50,7 @@ func main() {
 	c := pb.NewPingPoseidonClient(conn)
 
 	// Contact the server and print out its response.
-	name := defaultName
+	name := *defaultName
 	if len(os.Args) > 1 {
 		name = os.Args[1]
 	}
