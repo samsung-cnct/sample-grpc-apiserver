@@ -61,6 +61,9 @@ services:
 
 "publish_image":
   "stage": "publish"
+  before_script:
+  - docker info
+  - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
   script:
     - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
     - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
@@ -118,7 +121,7 @@ services:
 #  "variables":
 #    "DEPLOYMENT": "${APP_NAME}-${CI_PIPELINE_ID}-${APP_NAME}"
 #    "NAMESPACE": "${APP_NAME}-test-${CI_PIPELINE_ID}"
-#    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
+    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
 "variables":
   "PROTOC_VERSION": "3.5.1"
   "APP_NAME": "grpc-example"
