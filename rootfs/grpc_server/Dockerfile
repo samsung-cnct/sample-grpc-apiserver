@@ -1,3 +1,4 @@
 FROM scratch
-ADD bin/server /server
+ADD server /server
+ADD client /client
 CMD ["/server"]
