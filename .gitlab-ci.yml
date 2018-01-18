@@ -28,7 +28,7 @@
   - "go test client/*test.go"
 
 "build_image":
-  "stage": "docker_images"
+  "stage": "docker"
   services:
   - docker:dind
   dependencies: 
@@ -47,17 +47,17 @@
   "dependencies": 
   - "build_image"
   "script":
-  - "cd charts/${APP_NAME}"
+  - "cd charts/grpc_server"
   - "helm registry push ${CHART_REGISTRY_URI} -c beta"
-  "stage": "publish"
+  "stage": "helm"
   
 "lint_helm":
   "only":
   - "master"
   "script":
-  - "cd charts/${APP_NAME}"
+  - "cd charts/grpc_server"
   - "helm lint"
-  "stage": "publish"
+  "stage": "helm"
 
 "report-status":
   "after_script":
@@ -75,8 +75,8 @@
   
 "stages":
 - "build"
-- "docker_images"
-- "publish"
+- "docker"
+- "helm"
 - "deploy"
 - "github-status-update"
 
