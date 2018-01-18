@@ -63,7 +63,7 @@
   image: docker:latest
   before_script:
   - docker info
-  - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
+  - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
   script:
     - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
     - docker push $HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION
