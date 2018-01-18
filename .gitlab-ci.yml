@@ -100,24 +100,25 @@ services:
 - "deploy"
 - "github-status-update"
 
-  "before_script":
-  - "mkdir /root/.kube"
-  - "echo ${TEST_KUBECONFIG} | base64 -d > /root/.kube/config"
-  - "helm init"
-  - "helm delete --purge ${RELEASE} || /bin/echo \"${RELEASE} does not exist. Environment is clean.\""
-  - "kubectl delete namespace ${NAMESPACE} || /bin/echo \"${NAMESPACE} does not exist. Environment is clean.\""
-  "image": "quay.io/samsung_cnct/kraken-tools:v0.8"
-  "script":
-  - "build/test.sh"
-  - "helm install --name ${RELEASE} --namespace ${NAMESPACE} ${APP_NAME}"
-  - "kubectl rollout status sts/${DEPLOYMENT} -n ${NAMESPACE}"
-  - "helm delete --purge ${RELEASE}"
-  - "kubectl delete namespace ${NAMESPACE}"
-  "stage": "test"
-  "variables":
-    "DEPLOYMENT": "${APP_NAME}-${CI_PIPELINE_ID}-${APP_NAME}"
-    "NAMESPACE": "${APP_NAME}-test-${CI_PIPELINE_ID}"
-    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
+#"test":
+#  "before_script":
+#  - "mkdir /root/.kube"
+#  - "echo ${TEST_KUBECONFIG} | base64 -d > /root/.kube/config"
+#  - "helm init"
+#  - "helm delete --purge ${RELEASE} || /bin/echo \"${RELEASE} does not exist. Environment is clean.\""
+#  - "kubectl delete namespace ${NAMESPACE} || /bin/echo \"${NAMESPACE} does not exist. Environment is clean.\""
+#  "image": "quay.io/samsung_cnct/kraken-tools:v0.8"
+#  "script":
+#  - "build/test.sh"
+#  - "helm install --name ${RELEASE} --namespace ${NAMESPACE} ${APP_NAME}"
+#  - "kubectl rollout status sts/${DEPLOYMENT} -n ${NAMESPACE}"
+#  - "helm delete --purge ${RELEASE}"
+#  - "kubectl delete namespace ${NAMESPACE}"
+#  "stage": "test"
+#  "variables":
+#    "DEPLOYMENT": "${APP_NAME}-${CI_PIPELINE_ID}-${APP_NAME}"
+#    "NAMESPACE": "${APP_NAME}-test-${CI_PIPELINE_ID}"
+#    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
 "variables":
   "PROTOC_VERSION": "3.5.1"
   "APP_NAME": "grpc-example"
