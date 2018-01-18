@@ -9,21 +9,17 @@ services:
 #- docker info
 
 "build":
-  "image": "golang:1.9.2-stretch"
+  "image": "znly/protoc"
   "artifacts":
     "paths":
     - "${CHART_NAME}"
   "script":
   - "go get -u google.golang.org/grpc"
   - "go get -u github.com/golang/protobuf/protoc-gen-go"
-  - "wget https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-aarch_64.zip"
-  - "apt-get update && apt-get install unzip"
-  - "unzip protoc-${PROTOC_VERSION}-linux-aarch_64.zip"
-  - "bin/protoc -I api/ api/hello.proto --go_out=plugins=grpc:api"
+  - "protoc -I api/ api/hello.proto --go_out=plugins=grpc:api"
   - "go build"
 
 "build_image":
-  image: "docker:latest"
   script:
     - docker build -t "$HELM_REGISTRY_IMAGE:$HELM_REGISTRY_VERSION" rootfs/grpc_server
 #   - docker run my-docker-image /script/to/run/tests
