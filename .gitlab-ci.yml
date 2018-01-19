@@ -103,7 +103,6 @@
 "variables":
   "PROTOC_VERSION": "3.5.1"
   "APP_NAME": "grpc-example"
-  "REGISTRY_CHART_NAME": "kraken_grpc"
   "CHART_REGISTRY_URI": "${REGISTRY_HOST}/${REGISTRY_ORG}/${REGISTRY_CHART_NAME}"
   "CI_REF": "refs/heads/master"
   "EVENT": "push"
@@ -115,7 +114,7 @@
   "KUBECTL_VERSION": "v1.8.5"
   "PR_ID": ""
   "REF_NAME": "master"
-  "REGISTRY_CHART_NAME": "grpc-example"
+  "REGISTRY_CHART_NAME": "krakengrpc"
   "REGISTRY_HOST": "quay.io"
   "REGISTRY_ORG": "samsung_cnct"
   "SHA": "f53efd52a424af41c725dddbd8db187c89dd5b8c"
