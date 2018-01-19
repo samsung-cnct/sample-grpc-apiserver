@@ -49,7 +49,7 @@
   "image": $HELM_REGISTRY_IMAGE
   "script":
   - "cd charts/grpc"
-  - "helm registry push ${CHART_REGISTRY_URI} -c beta"
+  - "helm registry push $REGISTRY_HOST/$REGISTRY_ORG/$CHART_NAME -c beta"
   "stage": "helm"
   
 "lint_helm":
@@ -102,7 +102,7 @@
 "variables":
   "PROTOC_VERSION": "3.5.1"
   "APP_NAME": "grpc-example"
-  "CHART_NAME": "grpc-example"
+  "CHART_NAME": "grpc"
   "CHART_REGISTRY_URI": "${REGISTRY_HOST}/${REGISTRY_ORG}/${REGISTRY_CHART_NAME}"
   "CI_REF": "refs/heads/master"
   "EVENT": "push"
