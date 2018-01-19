@@ -48,6 +48,7 @@
   - "build_image"
   "image": $HELM_REGISTRY_IMAGE
   "script":
+  - "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
   - "cd charts/grpc"
   - "helm registry push $REGISTRY_HOST/$REGISTRY_ORG/$REGISTRY_CHART_NAME -c beta"
   "stage": "helm"
