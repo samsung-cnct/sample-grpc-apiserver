@@ -1,4 +1,32 @@
 
+"variables":
+  "PROTOC_VERSION": "3.5.1"
+  "APP_NAME": "grpc-example"
+  "CHART_REGISTRY_URI": "${REGISTRY_HOST}/${REGISTRY_ORG}/${REGISTRY_CHART_NAME}"
+  "CI_REF": "refs/heads/master"
+  "EVENT": "push"
+  "FAILFASTCI_STATUS_API": "https://failfast.ci.cnct.io//api/v1/github_status"
+  "GITHUB_INSTALLATION_ID": "64807"
+  "GITHUB_REPO": "samsung-cnct/chart-vault-etcd"
+  "HELM_REGISTRY_IMAGE": "quay.io/samsung_cnct/helm-registry-agent"
+  "HELM_REGISTRY_VERSION": "v0.7.4-helm_2.6"
+  "KUBECTL_VERSION": "v1.8.5"
+  "PR_ID": ""
+  "REF_NAME": "master"
+  "REGISTRY_CHART_NAME": "krakengrpc"
+  "REGISTRY_HOST": "quay.io"
+  "REGISTRY_ORG": "samsung_cnct"
+  "DOCKER_HOST": tcp://localhost:2375
+  "DOCKER_DRIVER": overlay2
+
+"stages":
+- "build"
+- "docker"
+- "helm"
+- "deploy"
+- "github-status-update"
+
+
 "before_script":
 #- "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
 - "export CHART_VER=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
@@ -60,62 +88,16 @@
   - "helm lint"
   "stage": "helm"
 
-"report-status":
-  "after_script":
-  - "curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 30}\" || true"
-  - "curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 150}\" || true"
-  "before_script": []
-  "image": "python:2.7"
-  "script":
-  - "echo curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 30}\" || true"
-  - "echo curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 150}\" || true"
-  "stage": "github-status-update"
-  "tags":
-  - "failfast-ci"
-  "when": "always"
-  
-"stages":
-- "build"
-- "docker"
-- "helm"
-- "deploy"
-- "github-status-update"
-
-#"test":
-#  "before_script":
-#  - "mkdir /root/.kube"
-#  - "echo ${TEST_KUBECONFIG} | base64 -d > /root/.kube/config"
-#  - "helm init"
-#  - "helm delete --purge ${RELEASE} || /bin/echo \"${RELEASE} does not exist. Environment is clean.\""
-#  - "kubectl delete namespace ${NAMESPACE} || /bin/echo \"${NAMESPACE} does not exist. Environment is clean.\""
-#  "image": "quay.io/samsung_cnct/kraken-tools:v0.8"
+#"report-status":
+#  "after_script":
+#  - "curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 30}\" || true"
+#  - "curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 150}\" || true"
+#  "before_script": []
+#  "image": "python:2.7"
 #  "script":
-#  - "build/test.sh"
-#  - "helm install --name ${RELEASE} --namespace ${NAMESPACE} ${APP_NAME}"
-#  - "kubectl rollout status sts/${DEPLOYMENT} -n ${NAMESPACE}"
-#  - "helm delete --purge ${RELEASE}"
-#  - "kubectl delete namespace ${NAMESPACE}"
-#  "stage": "test"
-#  "variables":
-#    "DEPLOYMENT": "${APP_NAME}-${CI_PIPELINE_ID}-${APP_NAME}"
-#    "NAMESPACE": "${APP_NAME}-test-${CI_PIPELINE_ID}"
-#    "RELEASE": "${APP_NAME}-${CI_PIPELINE_ID}"
-"variables":
-  "PROTOC_VERSION": "3.5.1"
-  "APP_NAME": "grpc-example"
-  "CHART_REGISTRY_URI": "${REGISTRY_HOST}/${REGISTRY_ORG}/${REGISTRY_CHART_NAME}"
-  "CI_REF": "refs/heads/master"
-  "EVENT": "push"
-  "FAILFASTCI_STATUS_API": "https://failfast.ci.cnct.io//api/v1/github_status"
-  "GITHUB_INSTALLATION_ID": "64807"
-  "GITHUB_REPO": "samsung-cnct/chart-vault-etcd"
-  "HELM_REGISTRY_IMAGE": "quay.io/samsung_cnct/helm-registry-agent"
-  "HELM_REGISTRY_VERSION": "v0.7.4-helm_2.6"
-  "KUBECTL_VERSION": "v1.8.5"
-  "PR_ID": ""
-  "REF_NAME": "master"
-  "REGISTRY_CHART_NAME": "krakengrpc"
-  "REGISTRY_HOST": "quay.io"
-  "REGISTRY_ORG": "samsung_cnct"
-  "DOCKER_HOST": tcp://localhost:2375
-  "DOCKER_DRIVER": overlay2
+#  - "echo curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 30}\" || true"
+#  - "echo curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 150}\" || true"
+#  "stage": "github-status-update"
+#  "tags":
+#  - "failfast-ci"
+#  "when": "always"
