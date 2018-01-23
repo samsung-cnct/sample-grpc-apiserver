@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "../api
+	pb "../api"
 	"google.golang.org/grpc/reflection"
 )
 
