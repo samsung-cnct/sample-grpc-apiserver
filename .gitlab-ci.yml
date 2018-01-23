@@ -83,7 +83,7 @@
   "only":
   - "master"
   "dependencies": 
-  - "build_image"
+  - "docker_image"
   "image": $HELM_REGISTRY_IMAGE
   "script":
   - "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
