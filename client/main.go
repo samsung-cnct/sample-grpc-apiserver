@@ -25,7 +25,7 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
+	pb "../api"
 )
 
 var (
