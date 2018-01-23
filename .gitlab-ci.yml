@@ -68,7 +68,7 @@
     - docker build -t "$REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION" rootfs/grpc_server
     - docker push $REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION
 
-"publish_helm":
+"helm_publish":
   "only":
   - "master"
   "dependencies": 
@@ -80,7 +80,7 @@
   - "helm registry push $REGISTRY_HOST/$REGISTRY_ORG/$REGISTRY_CHART_NAME -c beta"
   "stage": "helm"
   
-"lint_helm":
+"helm_lint":
   "image": $HELM_REGISTRY_IMAGE
   "script":
   - "cd charts/grpc"
