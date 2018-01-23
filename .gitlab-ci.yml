@@ -57,7 +57,7 @@
 "build_test-coveraage":
   "stage": "build"
   "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
-  "before-script":
+  "before_script":
   - "export COVERAGE_THRESHOLD=0.0"
   - "export SERVER_COVERAGE=$(go test -cover ./server | awk -F'[' %']' '{print $4}')"
   - "export CLIENT_COVERAGE=$(go test -cover ./client | awk -F'[' %']' '{print $4}')"
