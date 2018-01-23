@@ -47,14 +47,25 @@
   "artifacts":
     untracked: true
     
-"unit-tests":
+"build_unit-tests":
   "stage": "build"
   "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
   "script":
   - "go test server/*test.go"
   - "go test client/*test.go"
 
-"build_image":
+"build_test-coveraage":
+  "stage": "build"
+  "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
+  "before-script":
+  - "export COVERAGE_THRESHOLD=0.0"
+  - "export SERVER_COVERAGE=$(go test -cover ./server | awk -F'[' %']' '{print $4}')"
+  - "export CLIENT_COVERAGE=$(go test -cover ./client | awk -F'[' %']' '{print $4}')"
+  "script":
+  - 'if (( $(echo "$COVERAGE_THRESHHOLD > $SERVER_COVERAGE" | bc -l) )); then exit -1; fi'
+  - 'if (( $(echo "$COVERAGE_THRESHHOLD > $CLIENT_COVERAGE" | bc -l) )); then exit -1; fi'
+  
+"docker_image":
   "stage": "docker"
   services:
   - docker:dind
