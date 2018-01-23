@@ -26,7 +26,6 @@
 - "deploy"
 - "github-status-update"
 
-
 "before_script":
 #- "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
 - "export CHART_VER=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
@@ -42,7 +41,7 @@
   "script":
   - "go get -u google.golang.org/grpc"
   - "go get -u github.com/golang/protobuf/protoc-gen-go"
-  - "protoc -I api/ api/hello.proto --go_out=plugins=grpc:api"
+  - "protoc -I api/ api/api.proto --go_out=plugins=grpc:api"
   - "go build -o rootfs/grpc_server/server ./server"
   - "go build -o rootfs/grpc_server/client ./client"
   "artifacts":
