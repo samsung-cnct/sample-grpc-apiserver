@@ -22,26 +22,40 @@ import (
 	"flag"
 	"log"
 	"os"
-
+	"github.com/kmansel/sample-grpc-apiserver/certs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	pb "../api"
+	"google.golang.org/grpc/credentials"
+	"crypto/x509"
 )
-
+//5300
 var (
-  serverAddr = flag.String("server_addr", "localhost:5300", "The server address in the format of host:port")
+  	serverAddr = flag.String("server_addr", "127.0.0.1:8155", "The server address in the format of host:port")
+  	defaultName = flag.String("default_name", "trident", "Default service name")
+  	demoCertPool *x509.CertPool
 )
 
-var (
-  defaultName = flag.String("default_name", "trident", "Default service name")
-)
 
+func setupCerts() {
+	demoCertPool = x509.NewCertPool()
+	ok := demoCertPool.AppendCertsFromPEM([]byte(certs.Cert))
+	if !ok {
+		panic("bad certs")
+	}
+}
 
 func main() {
+
+	setupCerts()
+
 	log.Println("Client starting")
 	
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
+	var opts []grpc.DialOption
+	creds := credentials.NewClientTLSFromCert(demoCertPool, *serverAddr)
+	opts = append(opts, grpc.WithTransportCredentials(creds))
+	conn, err := grpc.Dial(*serverAddr, opts...)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -53,6 +67,7 @@ func main() {
 	if len(os.Args) > 1 {
 		name = os.Args[1]
 	}
+
 	r, err := c.GetPoseidon(context.Background(), &pb.HelloPoseidon{Name: name})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
@@ -61,7 +76,7 @@ func main() {
 	
 	r, err = c.GetPoseidonAgain(context.Background(), &pb.HelloPoseidon{Name: name})
 	if err != nil {
-	        log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.Message)
 }
