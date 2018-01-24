@@ -29,7 +29,7 @@ import (
 )
 
 var (
-  serverAddr = flag.String("server_addr", "localhost:5300", "The server address in the format of host:port")
+  serverAddr = flag.String("server_addr", "0.0.0.0:5300", "The server address in the format of host:port")
 )
 
 var (

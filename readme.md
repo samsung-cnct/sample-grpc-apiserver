@@ -48,3 +48,8 @@ where what the above comes from is
 ```
 protoc --doc_out <output_folder> --doc_opt=<format, file_output> <api_proto_input_files>
 ```
+
+### Acceptance Criteria for BAC-130 & BAC-136
+- docker build .
+- docker run -p 5300:5300 <container>
+- (new terminal) go run client/main.go
