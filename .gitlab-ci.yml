@@ -54,7 +54,7 @@
   - "go test server/*test.go"
   - "go test client/*test.go"
 
-"build_test-coveraage":
+"build_test-coverage":
   "stage": "build"
   "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
   "before_script":
