@@ -1,4 +1,6 @@
-
+services:
+  - docker:dind
+  
 "variables":
   "PROTOC_VERSION": "3.5.1"
   "APP_NAME": "grpc-example"
