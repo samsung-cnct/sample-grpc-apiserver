@@ -18,15 +18,13 @@
   "REGISTRY_ORG": "samsung_cnct"
   "DOCKER_HOST": tcp://localhost:2375
   "DOCKER_DRIVER": overlay2
-  "PROTOC_DOCS_IMAGE": "pseudomuto/protoc-gen-doc"
 
 "stages":
-# - "build"
-# - "docker"
-# - "helm"
-# - "deploy"
-# - "github-status-update"
-- "docs"
+- "build"
+- "docker"
+- "helm"
+- "deploy"
+- "github-status-update"
 
 "before_script":
 #- "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
@@ -101,23 +99,6 @@
   - "cd charts/grpc"
   - "helm lint"
   "stage": "helm"
-
-generate_docs:
-  image: $PROTOC_DOCS_IMAGE
-  stage: docs
-  script:
-    - >
-        docker run
-        -v $(pwd)/docs:/docs
-        -v $(pwd)/api:/protos
-        -v $(pwd)/vendor:/vendor
-        -I vendor/github.com/grpc-ecosystem/grpc-gateway
-        -I vendor/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
-        --proto_path /protos
-        /protos/Api.proto
-        --doc_out docs
-        --doc_opt=markdown,api.md
-
 
 #"report-status":
 #  "after_script":
