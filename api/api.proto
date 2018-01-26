@@ -16,12 +16,22 @@ syntax = "proto3";
 
 package trident;
 
+import "google/api/annotations.proto";
+
 // The greeting service definition.
 service PingPoseidon {
   // Sends a greeting
-  rpc GetPoseidon (HelloPoseidon) returns (PoseidonReply) {}
+  rpc GetPoseidon (HelloPoseidon) returns (PoseidonReply) {
+    option (google.api.http) = {
+      get : "/getPoseidon"
+    };
+  }
   // Sends another greeting
-  rpc GetPoseidonAgain (HelloPoseidon) returns (PoseidonReply) {}
+  rpc GetPoseidonAgain (HelloPoseidon) returns (PoseidonReply) {
+    option (google.api.http) = {
+      get : "/getPoseidonAgain"
+    };
+  }
 }
 
 // The request message containing the user's name.

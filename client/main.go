@@ -19,27 +19,22 @@
 package main
 
 import (
+	pb "../api"
 	"flag"
-	"log"
-	"os"
-
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "../api"
+	"log"
+	"os"
 )
 
 var (
-  serverAddr = flag.String("server_addr", "localhost:5300", "The server address in the format of host:port")
+	serverAddr  = flag.String("server_addr", "127.0.0.1:5300", "The server address in the format of host:port")
+	defaultName = flag.String("default_name", "trident", "Default service name")
 )
-
-var (
-  defaultName = flag.String("default_name", "trident", "Default service name")
-)
-
 
 func main() {
 	log.Println("Client starting")
-	
+
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
 	if err != nil {
@@ -53,15 +48,16 @@ func main() {
 	if len(os.Args) > 1 {
 		name = os.Args[1]
 	}
+
 	r, err := c.GetPoseidon(context.Background(), &pb.HelloPoseidon{Name: name})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.Message)
-	
+
 	r, err = c.GetPoseidonAgain(context.Background(), &pb.HelloPoseidon{Name: name})
 	if err != nil {
-	        log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.Message)
 }
