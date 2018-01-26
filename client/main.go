@@ -19,19 +19,18 @@
 package main
 
 import (
+	pb "../api"
 	"flag"
-	"log"
-	"os"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "../api"
+	"log"
+	"os"
 )
 
 var (
-	serverAddr = flag.String("server_addr", "127.0.0.1:5300", "The server address in the format of host:port")
+	serverAddr  = flag.String("server_addr", "127.0.0.1:5300", "The server address in the format of host:port")
 	defaultName = flag.String("default_name", "trident", "Default service name")
 )
-
 
 func main() {
 	log.Println("Client starting")

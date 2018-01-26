@@ -19,23 +19,23 @@
 package main
 
 import (
+	pb "../api"
 	"flag"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log"
+	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"golang.org/x/net/context"
-	"google.golang.org/grpc"
-	 pb "../api"
-	"net/http"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"net"
-	"google.golang.org/grpc/reflection"
 )
 
 var (
-  	serverAddrGRPC = flag.String("server_addr_grpc", "127.0.0.1:5300", "The server address in the format of host:port")
+	serverAddrGRPC = flag.String("server_addr_grpc", "127.0.0.1:5300", "The server address in the format of host:port")
 	serverAddrREST = flag.String("server_addr_rest", "127.0.0.1:6300", "The REST endpoint address, in the format of host:port")
 )
 
@@ -48,7 +48,7 @@ func (s *server) GetPoseidon(ctx context.Context, in *pb.HelloPoseidon) (*pb.Pos
 }
 
 func (s *server) GetPoseidonAgain(ctx context.Context, in *pb.HelloPoseidon) (*pb.PoseidonReply, error) {
-        return &pb.PoseidonReply{Message: "Hello again " + in.Name}, nil
+	return &pb.PoseidonReply{Message: "Hello again " + in.Name}, nil
 }
 
 func main() {
@@ -65,13 +65,13 @@ func main() {
 
 	// Chance here to gracefully handle being stopped.
 	go func() {
-	    sig := <-gracefulStop
-	    log.Printf("caught sig: %+v", sig)
-	    log.Println("Wait for 2 second to finish processing")
-	    time.Sleep(2*time.Second)
+		sig := <-gracefulStop
+		log.Printf("caught sig: %+v", sig)
+		log.Println("Wait for 2 second to finish processing")
+		time.Sleep(2 * time.Second)
 		grpcServer.Stop()
-	    log.Print("service terminated")
-	    os.Exit(0)
+		log.Print("service terminated")
+		os.Exit(0)
 	}()
 
 	log.Printf("Setting up GPRC to listen on : %v", *serverAddrGRPC)
