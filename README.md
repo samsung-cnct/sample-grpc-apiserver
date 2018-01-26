@@ -14,8 +14,6 @@ go get -u github.com/golang/protobuf/protoc-gen-go
 Finally install latest version of protobuf from release page [https://github.com/google/protobuf/releases](https://github.com/google/protobuf/releases) which
 contains the `protoc` binary that must be copied/moved to your `PATH`, e.g., `/usr/local/bin`.
 
-
-
 # Generating Golang API
 To build the api (generate go code from proto file) you will want to run a command like
 ```
