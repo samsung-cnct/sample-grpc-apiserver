@@ -5,10 +5,11 @@ Keep in mind that gRPC requires golang v1.6 or greater, to install run
 go get -u google.golang.org/grpc
 ```
 
-and also run
+and also run these commands for our other required packages
 
 ```
 go get -u github.com/golang/protobuf/protoc-gen-go
+go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 ```
 
 Finally install latest version of protobuf from release page [https://github.com/google/protobuf/releases](https://github.com/google/protobuf/releases) which
