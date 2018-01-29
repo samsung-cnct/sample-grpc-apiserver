@@ -1,106 +1,109 @@
-services:
-  - docker:dind
+---
+variables:
+  PROTOC_VERSION: 3.5.1
+  APP_NAME: grpc-example
+  CHART_REGISTRY_URI: ${REGISTRY_HOST}/${REGISTRY_ORG}/${REGISTRY_CHART_NAME}
+  CI_REF: refs/heads/master
+  EVENT: push
+  FAILFASTCI_STATUS_API: https://failfast.ci.cnct.io//api/v1/github_status
+  GITHUB_INSTALLATION_ID: 64807
+  GITHUB_REPO: samsung-cnct/chart-vault-etcd
+  HELM_REGISTRY_IMAGE: quay.io/samsung_cnct/helm-registry-agent
+  HELM_REGISTRY_VERSION: v0.7.4-helm_2.6
+  KUBECTL_VERSION: v1.8.5
+  PR_ID: 
+  REF_NAME: master
+  REGISTRY_CHART_NAME: krakengrpc
+  REGISTRY_HOST: quay.io
+  REGISTRY_ORG: samsung_cnct
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_DRIVER: overlay2
+  PROTOC_IMAGE: registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc
 
-"variables":
-  "PROTOC_VERSION": "3.5.1"
-  "APP_NAME": "grpc-example"
-  "CHART_REGISTRY_URI": "${REGISTRY_HOST}/${REGISTRY_ORG}/${REGISTRY_CHART_NAME}"
-  "CI_REF": "refs/heads/master"
-  "EVENT": "push"
-  "FAILFASTCI_STATUS_API": "https://failfast.ci.cnct.io//api/v1/github_status"
-  "GITHUB_INSTALLATION_ID": "64807"
-  "GITHUB_REPO": "samsung-cnct/chart-vault-etcd"
-  "HELM_REGISTRY_IMAGE": "quay.io/samsung_cnct/helm-registry-agent"
-  "HELM_REGISTRY_VERSION": "v0.7.4-helm_2.6"
-  "KUBECTL_VERSION": "v1.8.5"
-  "PR_ID": ""
-  "REF_NAME": "master"
-  "REGISTRY_CHART_NAME": "krakengrpc"
-  "REGISTRY_HOST": "quay.io"
-  "REGISTRY_ORG": "samsung_cnct"
-  "DOCKER_HOST": tcp://localhost:2375
-  "DOCKER_DRIVER": overlay2
+stages:
+  - build
+  - docs
+  - docker
+  - helm
+  - deploy
+  - github-status-update
 
-"stages":
-- "build"
-- "docker"
-- "helm"
-- "deploy"
-- "github-status-update"
+before_script:
+  #- helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
+  - export CHART_VER=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
+  - export CHART_REL=$(git rev-list --count v${CHART_VER}..HEAD 2>/dev/null )
+  # - docker info
 
-"before_script":
-#- "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
-- "export CHART_VER=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
-- "export CHART_REL=$(git rev-list --count v${CHART_VER}..HEAD 2>/dev/null )"
-#- docker info
-
-"build":
-  "stage": "build"
-  "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
-  "artifacts":
-    "paths":
-    - "${CHART_NAME}"
-  "script":
-  - "go get -u google.golang.org/grpc"
-  - "go get -u github.com/golang/protobuf/protoc-gen-go"
-  - "go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway"
-  - "protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --go_out=plugins=grpc:api"
-  - "protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --grpc-gateway_out=logtostderr=true:api"
-  - "go build -o rootfs/grpc_server/server ./server"
-  - "go build -o rootfs/grpc_server/client ./client"
-  "artifacts":
+build:
+  stage: build
+  image: $PROTOC_IMAGE
+  artifacts:
+    paths:
+    - ${CHART_NAME}
+  script:
+    - go get -u google.golang.org/grpc
+    - go get -u github.com/golang/protobuf/protoc-gen-go
+    - go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
+    - protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --go_out=plugins=grpc:api
+    - protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --grpc-gateway_out=logtostderr=true:api
+    - go build -o rootfs/grpc_server/server ./server
+    - go build -o rootfs/grpc_server/client ./client
+  artifacts:
     untracked: true
     
-"build_unit-tests":
-  "stage": "build"
-  "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
-  "script":
-  - "go test server/*test.go"
-  - "go test client/*test.go"
-
-"build_test-coverage":
-  "stage": "build"
-  "image": "registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc"
-  "before_script":
-  - "export COVERAGE_THRESHOLD=0.0"
-  - "export SERVER_COVERAGE=$(go test -cover ./server | awk -F'[' %']' '{print $4}')"
-  - "export CLIENT_COVERAGE=$(go test -cover ./client | awk -F'[' %']' '{print $4}')"
-  "script":
-  - 'if (( $(echo "$COVERAGE_THRESHHOLD > $SERVER_COVERAGE" | bc -l) )); then exit -1; fi'
-  - 'if (( $(echo "$COVERAGE_THRESHHOLD > $CLIENT_COVERAGE" | bc -l) )); then exit -1; fi'
-  
-"docker_image":
-  "stage": "docker"
-  services:
-  - docker:dind
-  dependencies: 
-  - build
-  image: docker:latest
-  before_script:
-  - docker info
-  - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
+unit-tests:
+  stage: build
+  image: $PROTOC_IMAGE
   script:
-    - docker build -t "$REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION" rootfs/grpc_server
+    - go test server/*test.go
+    - go test client/*test.go
+
+generate_docs:
+  stage: docs
+  image: $PROTOC_IMAGE
+  script:
+    - go get -u github.com/pseudomuto/protoc-gen-doc/cmd/...
+    - cd /common-tools/samsung-cnct_sample-grpc-apiserver
+    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc --doc_out=markdown,api.md:docs api/*.proto
+  artifacts:
+    untracked: true
+    paths: 
+      - /common-tools/samsung-cnct_sample-grpc-apiserver/docs/*
+    expire_in: 14 day
+
+build_image:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  dependencies: 
+    - build
+  before_script:
+    - docker info
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
+  script:
+    - docker build -t $REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION rootfs/grpc_server
     - docker push $REGISTRY_HOST/$REGISTRY_ORG/$APP_NAME:$HELM_REGISTRY_VERSION
 
-"helm_publish":
-  "only":
-  - "master"
-  "dependencies": 
-  - "docker_image"
-  "image": $HELM_REGISTRY_IMAGE
-  "script":
-  - "helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}"
-  - "cd charts/grpc"
-  - "helm registry push $REGISTRY_HOST/$REGISTRY_ORG/$REGISTRY_CHART_NAME -c beta"
-  "stage": "helm"
+helm_publish:
+  stage: helm
+  image: $HELM_REGISTRY_IMAGE
+  only:
+    - master
+  dependencies: 
+    - build_image
+  script:
+    - helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
+    - cd charts/grpc
+    - helm registry push $REGISTRY_HOST/$REGISTRY_ORG/$REGISTRY_CHART_NAME -c beta
   
-"helm_lint":
-  "image": $HELM_REGISTRY_IMAGE
-  "script":
-  - "cd charts/grpc"
-  - "helm lint"
-  "stage": "helm"
+helm_lint:
+  stage: helm
+  image: $HELM_REGISTRY_IMAGE
+  script:
+    - cd charts/grpc
+    - helm lint
+
 
 #"report-status":
 #  "after_script":
