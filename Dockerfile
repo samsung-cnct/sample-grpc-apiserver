@@ -1,5 +1,5 @@
 # Dockerfile for gRPC Go
-FROM golang:1.7
+FROM golang:1.9
 
 RUN apt-get update && apt-get -y install unzip && apt-get clean
 

@@ -17,29 +17,32 @@ syntax = "proto3";
 package trident;
 
 import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
 
 // The greeting service definition.
 service PingPoseidon {
   // Sends a greeting
-  rpc GetPoseidon (HelloPoseidon) returns (PoseidonReply) {
+  rpc HelloPoseidon (HelloPoseidonMsg) returns (PoseidonReply) {
     option (google.api.http) = {
-      get : "/getPoseidon"
+      post : "/v1/helloposeidon"
+      body: "*"
     };
   }
   // Sends another greeting
-  rpc GetPoseidonAgain (HelloPoseidon) returns (PoseidonReply) {
+  rpc HelloPoseidonAgain (HelloPoseidonMsg) returns (PoseidonReply) {
     option (google.api.http) = {
-      get : "/getPoseidonAgain"
+      post : "/v1/helloposeidonagain"
+      body: "*"
     };
   }
 }
 
 // The request message containing the user's name.
-message HelloPoseidon {
-  string name = 1;
+message HelloPoseidonMsg {
+  string name = 1; // name of individual messaging poseidon
 }
 
 // The response message containing the greetings
 message PoseidonReply {
-  string message = 1;
+  string message = 1; // reply from poseidon
 }

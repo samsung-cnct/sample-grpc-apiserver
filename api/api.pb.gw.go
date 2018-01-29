@@ -28,36 +28,32 @@ var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
 
-var (
-	filter_PingPoseidon_GetPoseidon_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-)
-
-func request_PingPoseidon_GetPoseidon_0(ctx context.Context, marshaler runtime.Marshaler, client PingPoseidonClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq HelloPoseidon
+func request_PingPoseidon_HelloPoseidon_0(ctx context.Context, marshaler runtime.Marshaler, client PingPoseidonClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq HelloPoseidonMsg
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_PingPoseidon_GetPoseidon_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	if req.ContentLength > 0 {
+		if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil {
+			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+		}
 	}
 
-	msg, err := client.GetPoseidon(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.HelloPoseidon(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-var (
-	filter_PingPoseidon_GetPoseidonAgain_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-)
-
-func request_PingPoseidon_GetPoseidonAgain_0(ctx context.Context, marshaler runtime.Marshaler, client PingPoseidonClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq HelloPoseidon
+func request_PingPoseidon_HelloPoseidonAgain_0(ctx context.Context, marshaler runtime.Marshaler, client PingPoseidonClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq HelloPoseidonMsg
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_PingPoseidon_GetPoseidonAgain_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	if req.ContentLength > 0 {
+		if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil {
+			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+		}
 	}
 
-	msg, err := client.GetPoseidonAgain(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.HelloPoseidonAgain(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
@@ -100,7 +96,7 @@ func RegisterPingPoseidonHandler(ctx context.Context, mux *runtime.ServeMux, con
 // "PingPoseidonClient" to call the correct interceptors.
 func RegisterPingPoseidonHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PingPoseidonClient) error {
 
-	mux.Handle("GET", pattern_PingPoseidon_GetPoseidon_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PingPoseidon_HelloPoseidon_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -118,18 +114,18 @@ func RegisterPingPoseidonHandlerClient(ctx context.Context, mux *runtime.ServeMu
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PingPoseidon_GetPoseidon_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PingPoseidon_HelloPoseidon_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PingPoseidon_GetPoseidon_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PingPoseidon_HelloPoseidon_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_PingPoseidon_GetPoseidonAgain_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PingPoseidon_HelloPoseidonAgain_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -147,14 +143,14 @@ func RegisterPingPoseidonHandlerClient(ctx context.Context, mux *runtime.ServeMu
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PingPoseidon_GetPoseidonAgain_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PingPoseidon_HelloPoseidonAgain_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PingPoseidon_GetPoseidonAgain_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PingPoseidon_HelloPoseidonAgain_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -162,13 +158,13 @@ func RegisterPingPoseidonHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_PingPoseidon_GetPoseidon_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"getPoseidon"}, ""))
+	pattern_PingPoseidon_HelloPoseidon_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "helloposeidon"}, ""))
 
-	pattern_PingPoseidon_GetPoseidonAgain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"getPoseidonAgain"}, ""))
+	pattern_PingPoseidon_HelloPoseidonAgain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "helloposeidonagain"}, ""))
 )
 
 var (
-	forward_PingPoseidon_GetPoseidon_0 = runtime.ForwardResponseMessage
+	forward_PingPoseidon_HelloPoseidon_0 = runtime.ForwardResponseMessage
 
-	forward_PingPoseidon_GetPoseidonAgain_0 = runtime.ForwardResponseMessage
+	forward_PingPoseidon_HelloPoseidonAgain_0 = runtime.ForwardResponseMessage
 )

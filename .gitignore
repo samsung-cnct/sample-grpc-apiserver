@@ -1,3 +1,9 @@
+# artifact dir
+# Files/dirs like .idea shoud only be added to your global gitignore file.
+
+
+rootfs/grpc_server/server
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Go template
 # Binaries for programs and plugins
@@ -14,5 +20,3 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
-
-.idea
