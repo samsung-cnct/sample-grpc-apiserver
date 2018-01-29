@@ -63,6 +63,7 @@ generate_docs:
   image: $PROTOC_IMAGE
   script:
     - go get -u github.com/pseudomuto/protoc-gen-doc/cmd/...
+    - ls /go/src/
     - cd /common-tools/samsung-cnct_sample-grpc-apiserver
     - ls
     - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway  --proto_path api/  api/api.proto --doc_out=markdown,api.md:docs api/*.proto
