@@ -18,7 +18,9 @@ contains the `protoc` binary that must be copied/moved to your `PATH`, e.g., `/u
 # Generating Golang API
 To build the api (generate go code from proto file) you will want to run a command like
 ```
-protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --go_out=plugins=grpc:api
+protoc -I api/ api/api.proto
+-I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
+--go_out=plugins=grpc:api
 ```
 
 where in general you would run
@@ -29,12 +31,17 @@ protoc -I <input_directory> <path_to_file> --go_out=plugins=grpc:<output_directo
 
 # Generating Golang Reverse Proxy REST API
 ```
-protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --grpc-gateway_out=logtostderr=true:api
+protoc -I api/ api/api.proto
+-I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
+--grpc-gateway_out=logtostderr=true:api
 ```
 
 # Generated Documentation
-We can follow along [https://github.com/pseudomuto/protoc-gen-doc](https://github.com/pseudomuto/protoc-gen-doc). You can
-follow along the docker commands (recommended) or run locally (assuming you have golang set up properly)
+We can follow along
+[https://github.com/pseudomuto/protoc-gen-doc](https://github.com/pseudomuto/protoc-gen-doc). You
+can
+follow along the docker commands (recommended) or run locally (assuming you have golang set up
+properly)
 via
 
 ```
