@@ -64,7 +64,7 @@ generate_docs:
   script:
     - go get -u github.com/pseudomuto/protoc-gen-doc/cmd/...
     - cd /common-tools/samsung-cnct_sample-grpc-apiserver
-    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis  --proto_path /api  /api/api.proto --doc_out=markdown,api.md:docs api/*.proto
+    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc  --proto_path /api  /api/api.proto --doc_out=markdown,api.md:docs api/*.proto
     # - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc --doc_out=markdown,api.md:docs api/*.proto
   artifacts:
     untracked: true
