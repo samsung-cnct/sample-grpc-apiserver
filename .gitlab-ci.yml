@@ -7,7 +7,7 @@ variables:
   EVENT: push
   FAILFASTCI_STATUS_API: https://failfast.ci.cnct.io//api/v1/github_status
   GITHUB_INSTALLATION_ID: 64807
-  GITHUB_REPO: samsung-cnct/chart-vault-etcd
+  GITHUB_REPO: samsung-cnct/sample-grpc-apiserver
   HELM_REGISTRY_IMAGE: quay.io/samsung_cnct/helm-registry-agent
   HELM_REGISTRY_VERSION: v0.7.4-helm_2.6
   KUBECTL_VERSION: v1.8.5
@@ -22,7 +22,6 @@ variables:
 
 stages:
   - build
-  - docs
   - docker
   - helm
   - deploy
@@ -59,7 +58,7 @@ unit-tests:
     - go test client/*test.go
 
 generate_docs:
-  stage: docs
+  stage: build
   image: $PROTOC_IMAGE
   script:
     - go get -u google.golang.org/grpc
