@@ -66,7 +66,7 @@ generate_docs:
     - ls /go/src/
     - cd /common-tools/samsung-cnct_sample-grpc-apiserver
     - ls
-    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc -I/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis  --proto_path api/  api/api.proto --doc_out=markdown,api.md:docs api/*.proto
+    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc --go_out=google/api/annotations.proto=/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api,plugins=api:.  --proto_path api/  api/api.proto --doc_out=markdown,api.md:docs api/*.proto
     # - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc --doc_out=markdown,api.md:docs api/*.proto
   artifacts:
     untracked: true
