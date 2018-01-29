@@ -62,6 +62,9 @@ generate_docs:
   stage: docs
   image: $PROTOC_IMAGE
   script:
+    - go get -u google.golang.org/grpc
+    - go get -u github.com/golang/protobuf/protoc-gen-go
+    - go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
     - go get -u github.com/pseudomuto/protoc-gen-doc/cmd/...
     - cd /common-tools/samsung-cnct_sample-grpc-apiserver
     - ls
