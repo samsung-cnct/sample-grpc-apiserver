@@ -23,10 +23,10 @@ RUN go get github.com/golang/protobuf/protoc-gen-go
 
 RUN go get github.com/samsung-cnct/sample-grpc-apiserver/api
 
-RUN mkdir -p /usr/bin/api && \
-    cp -r . /usr/bin/api && \
-    cd /usr/bin/api && \
+RUN mkdir -p sample-grpc-apiserver/
+ADD . sample-grpc-apiserver/
+RUN cd sample-grpc-apiserver/ && \
     protoc -I api api/api.proto --go_out=plugins=grpc:api 
 
 EXPOSE 5300
-ENTRYPOINT go run /usr/bin/api/server/main.go 
+ENTRYPOINT go run sample-grpc-apiserver/server/main.go 
