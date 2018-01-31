@@ -54,8 +54,7 @@ generate_docs:
   stage: build
   image: $PROTOC_IMAGE
   script:
-    - go get -u google.golang.org/grpc
-    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --proto_path api/  --doc_out=markdown,api.md:docs api/*.proto
+    - ./bin/gen_apis.sh
   artifacts:
     untracked: true
     paths: 

@@ -31,7 +31,6 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
-	c "github.com/samsung-cnct/sample-grpc-apiserver/configs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -54,7 +53,7 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	err := c.InitEnvVars()
+	err := configs.InitEnvVars()
 	if err != nil {
 		log.Fatalf("failed to init config vars: %s", err)
 	}
