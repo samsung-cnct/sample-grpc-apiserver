@@ -53,14 +53,14 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	err := configs.InitEnvVars()
+	err := InitEnvVars()
 	if err != nil {
 		log.Fatalf("failed to init config vars: %s", err)
 	}
 
 	log.Println("Server starting")
 
-	gwPort, port, gwAddress, address := c.ParseGateWayEnvVars()
+	gwPort, port, gwAddress, address := ParseGateWayEnvVars()
 
 	serverAddr := fmt.Sprintf("%s:%d", address, port)
 	gwServerAddr := fmt.Sprintf("%s:%d", gwAddress, gwPort)
