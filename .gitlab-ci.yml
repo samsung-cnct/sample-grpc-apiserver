@@ -39,6 +39,7 @@ build:
     - ${CHART_NAME}
   script:
     - ./bin/gen_apis.sh
+    - pwd && echo $GOPATH
     - go build -o rootfs/grpc_server/server ./server
     - go build -o rootfs/grpc_server/client ./client
   artifacts:
@@ -48,6 +49,7 @@ unit-tests:
   stage: build
   image: $PROTOC_IMAGE
   script:
+    - ./bin/checks/verify-gosimple.sh
     - ./bin/test.sh -v
 
 generate_docs:
