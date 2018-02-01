@@ -47,7 +47,7 @@ run-check "${ROOT}/bin/checks/verify-go-vet.sh" bash
 run-check "${ROOT}/bin/checks/verify-gofmt.sh" bash
 run-check "${ROOT}/bin/checks/verify-goimports.sh" bash
 run-check "${ROOT}/bin/checks/verify-golint.sh" bash
-run-check "${ROOT}/bin/checks/verify-gosimple.sh" bash
+#run-check "${ROOT}/bin/checks/verify-gosimple.sh" bash
 run-check "${ROOT}/bin/checks/verify-gocyclo.sh" bash
 run-check "${ROOT}/bin/checks/verify-goconst.sh" bash
 run-check "${ROOT}/bin/checks/verify-gogas.sh" bash

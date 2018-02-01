@@ -20,7 +20,6 @@ package main
 
 import (
 	"log"
-
 	"fmt"
 
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
