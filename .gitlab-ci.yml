@@ -22,6 +22,7 @@ variables:
 
 stages:
   - build
+  - test
   - docker
   - helm
   - deploy
@@ -48,7 +49,7 @@ build:
     untracked: true
 
 unit-tests:
-  stage: build
+  stage: test
   image: $PROTOC_IMAGE
   script:
     - ./bin/verify.sh -v

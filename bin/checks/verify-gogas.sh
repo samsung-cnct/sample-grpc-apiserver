@@ -12,7 +12,7 @@ cd "${ROOT}"
 
 gas=$(which gas)
 if [[ ! -x "${gas}" ]]; then
-  warn "could not find goconst, please verify your GOPATH"
+  warn "could not find gas, please verify your GOPATH"
   inf "https://github.com/GoASTScanner/gas"
   exit 1
 fi
