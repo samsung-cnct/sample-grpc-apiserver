@@ -52,8 +52,6 @@ unit-tests:
   stage: test
   image: $PROTOC_IMAGE
   script:
-    - gosimple ./client/
-    - gosimple ./server/
     - ./bin/test.sh -v
 
 generate_docs:
