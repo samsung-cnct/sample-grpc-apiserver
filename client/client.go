@@ -19,8 +19,8 @@
 package main
 
 import (
-	"log"
 	"fmt"
+	"log"
 
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
 	"github.com/samsung-cnct/sample-grpc-apiserver/configs"
