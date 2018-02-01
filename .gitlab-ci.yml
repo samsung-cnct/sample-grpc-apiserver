@@ -39,7 +39,7 @@ build:
     - ${CHART_NAME}
   script:
     - mkdir -p /go/src/github.com/samsung-cnct
-    - ln -s . /go/src/github.com/samsung-cnct/sample-grpc-apiserver
+    - ln -s /common-tools/samsung-cnct_sample-grpc-apiserver /go/src/github.com/samsung-cnct/sample-grpc-apiserver
     - cd /go/src/github.com/samsung-cnct/sample-grpc-apiserver
     - pwd && echo $GOPATH && ls -al
     - ./bin/gen_apis.sh
