@@ -52,6 +52,7 @@ unit-tests:
   image: $PROTOC_IMAGE
   script:
     - which gosimple
+    - which xargs
     - ./bin/checks/verify-gosimple.sh
     - ./bin/test.sh -v
 
