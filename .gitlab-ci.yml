@@ -52,7 +52,7 @@ unit-tests:
   stage: test
   image: $PROTOC_IMAGE
   script:
-    - ./bin/verify.sh -v
+    - ./bin/checks/verify-gosimple.sh
     - ./bin/test.sh -v
 
 generate_docs:
