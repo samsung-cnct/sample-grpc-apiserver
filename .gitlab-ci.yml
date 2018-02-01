@@ -41,8 +41,8 @@ build:
     - mkdir -p /go/src/github.com/samsung-cnct
     - ln -s . /go/src/github.com/samsung-cnct/sample-grpc-apiserver
     - cd /go/src/github.com/samsung-cnct/sample-grpc-apiserver
+    - pwd && echo $GOPATH && ls -al
     - ./bin/gen_apis.sh
-    - pwd && echo $GOPATH
     - go build -o rootfs/grpc_server/server ./server
     - go build -o rootfs/grpc_server/client ./client
   artifacts:
