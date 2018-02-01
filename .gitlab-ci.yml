@@ -51,9 +51,7 @@ unit-tests:
   stage: build
   image: $PROTOC_IMAGE
   script:
-    - which gosimple
-    - which xargs
-    - ./bin/checks/verify-gosimple.sh
+    - ./bin/verify.sh -v
     - ./bin/test.sh -v
 
 generate_docs:
