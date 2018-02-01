@@ -41,10 +41,6 @@ build:
     paths:
     - ${CHART_NAME}
   script:
-#    - mkdir -p /go/src/github.com/samsung-cnct
-#    - ln -s /common-tools/samsung-cnct_sample-grpc-apiserver /go/src/github.com/samsung-cnct/sample-grpc-apiserver
-#    - cd /go/src/github.com/samsung-cnct/sample-grpc-apiserver
-#    - pwd && echo $GOPATH && ls -al
     - ./bin/gen_apis.sh
     - go build -o rootfs/grpc_server/server ./server
     - go build -o rootfs/grpc_server/client ./client
@@ -55,6 +51,7 @@ unit-tests:
   stage: build
   image: $PROTOC_IMAGE
   script:
+    - which gosimple
     - ./bin/checks/verify-gosimple.sh
     - ./bin/test.sh -v
 
