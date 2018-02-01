@@ -24,17 +24,26 @@ import (
 	"os"
 
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
+	c "github.com/samsung-cnct/sample-grpc-apiserver/configs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"fmt"
 )
 
 var (
-	serverAddr  = flag.String("server_addr", "localhost:5300", "The server address in the format of host:port")
 	defaultName = flag.String("default_name", "trident", "Default service name")
 )
 
 func main() {
 	log.Println("Client starting")
+
+	err := c.InitEnvVars()
+	if err != nil {
+		log.Fatalf("failed to init config vars: %s", err)
+	}
+
+	_, port, _, address := c.ParseGateWayEnvVars()
+	serverAddr := fmt.Sprintf("%s:%d", address, port)
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())

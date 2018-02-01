@@ -31,6 +31,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
+	c "github.com/samsung-cnct/sample-grpc-apiserver/configs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -53,14 +54,14 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	err := InitEnvVars()
+	err := c.InitEnvVars()
 	if err != nil {
 		log.Fatalf("failed to init config vars: %s", err)
 	}
 
 	log.Println("Server starting")
 
-	gwPort, port, gwAddress, address := ParseGateWayEnvVars()
+	gwPort, port, gwAddress, address := c.ParseGateWayEnvVars()
 
 	serverAddr := fmt.Sprintf("%s:%d", address, port)
 	gwServerAddr := fmt.Sprintf("%s:%d", gwAddress, gwPort)
