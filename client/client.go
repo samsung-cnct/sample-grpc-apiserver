@@ -19,45 +19,35 @@
 package main
 
 import (
-	"flag"
 	"log"
-	"os"
+
+	"fmt"
 
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
-	c "github.com/samsung-cnct/sample-grpc-apiserver/configs"
+	"github.com/samsung-cnct/sample-grpc-apiserver/configs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"fmt"
-)
-
-var (
-	defaultName = flag.String("default_name", "trident", "Default service name")
 )
 
 func main() {
 	log.Println("Client starting")
 
-	err := c.InitEnvVars()
+	err := configs.InitEnvVars()
 	if err != nil {
 		log.Fatalf("failed to init config vars: %s", err)
 	}
 
-	_, port, _, address := c.ParseGateWayEnvVars()
+	_, port, _, address := configs.ParseGateWayEnvVars()
 	serverAddr := fmt.Sprintf("%s:%d", address, port)
+	name := configs.ParseClientEnvVars()
 
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
+	conn, err := grpc.Dial(serverAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewPingPoseidonClient(conn)
-
-	// Contact the server and print out its response.
-	name := *defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
 
 	r, err := c.HelloPoseidon(context.Background(), &pb.HelloPoseidonMsg{Name: name})
 	if err != nil {

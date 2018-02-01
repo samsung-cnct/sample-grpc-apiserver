@@ -10,12 +10,14 @@ var (
 	envServicePort           = "service_port"
 	envGateWayServiceAddress = "gw_service_address"
 	envGateWayPort           = "gw_port"
+	envClientName            = "client_name"
+	envGateWaySwaggerDir     = "gw_swagger_dir"
 	addressDefault           = "localhost"
 	portDefault              = 5300
 	gwAddressDefault         = "localhost"
 	gwPortDefault            = 6300
-	envGateWaySwaggerDir     = "gw_swagger_dir"
 	gwSwaggerDirDefault      = "swagger"
+	clientNameDefault        = "trident"
 )
 
 // InitEnvVars allows you to initiate gathering environment variables
@@ -36,6 +38,10 @@ func InitEnvVars() error {
 	}
 
 	if err = viper.BindEnv(envGateWayPort); err != nil {
+		return err
+	}
+
+	if err = viper.BindEnv(envClientName); err != nil {
 		return err
 	}
 
@@ -76,4 +82,14 @@ func ParseGateWayEnvVars() (int, int, string, string) {
 	}
 
 	return gwPort, port, gwServiceAddress, serviceAddress
+}
+
+// ParseClientEnvVars parses environment variables consumed by clients
+func ParseClientEnvVars() string {
+	clientName := viper.GetString(envClientName)
+	if clientName == "" {
+		clientName = clientNameDefault
+	}
+
+	return clientName
 }
