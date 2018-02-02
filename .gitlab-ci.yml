@@ -52,7 +52,6 @@ unit-tests:
   stage: test
   image: $PROTOC_IMAGE
   script:
-    - ./bin/checks/verify-gogas.sh
     - ./bin/test.sh -v
 
 generate_docs:
