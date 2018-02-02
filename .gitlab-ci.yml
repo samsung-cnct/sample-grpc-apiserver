@@ -67,7 +67,8 @@ generate_docs:
 
 build_image:
   stage: docker
-  services: docker:latest
+  image: docker:latest
+  services:
     - docker:dind
   dependencies: 
     - test
