@@ -67,10 +67,10 @@ generate_docs:
 
 build_image:
   stage: docker
-  image: docker:latest
+  services: docker:latest
     - docker:dind
   dependencies: 
-    - build
+    - test
   before_script:
     - docker info
     - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
