@@ -71,7 +71,7 @@ build_image:
   services:
     - docker:dind
   dependencies: 
-    - test
+    - build
   before_script:
     - docker info
     - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_HOST/$REGISTRY_ORG
