@@ -8,7 +8,7 @@ It is generated from these files:
 	api.proto
 
 It has these top-level messages:
-	HelloPoseidon
+	HelloPoseidonMsg
 	PoseidonReply
 */
 package trident
@@ -17,6 +17,7 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import _ "google.golang.org/genproto/googleapis/api/annotations"
+import _ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options"
 
 import (
 	context "golang.org/x/net/context"
@@ -35,16 +36,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 // The request message containing the user's name.
-type HelloPoseidon struct {
+type HelloPoseidonMsg struct {
 	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 }
 
-func (m *HelloPoseidon) Reset()                    { *m = HelloPoseidon{} }
-func (m *HelloPoseidon) String() string            { return proto.CompactTextString(m) }
-func (*HelloPoseidon) ProtoMessage()               {}
-func (*HelloPoseidon) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (m *HelloPoseidonMsg) Reset()                    { *m = HelloPoseidonMsg{} }
+func (m *HelloPoseidonMsg) String() string            { return proto.CompactTextString(m) }
+func (*HelloPoseidonMsg) ProtoMessage()               {}
+func (*HelloPoseidonMsg) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-func (m *HelloPoseidon) GetName() string {
+func (m *HelloPoseidonMsg) GetName() string {
 	if m != nil {
 		return m.Name
 	}
@@ -69,7 +70,7 @@ func (m *PoseidonReply) GetMessage() string {
 }
 
 func init() {
-	proto.RegisterType((*HelloPoseidon)(nil), "trident.HelloPoseidon")
+	proto.RegisterType((*HelloPoseidonMsg)(nil), "trident.HelloPoseidonMsg")
 	proto.RegisterType((*PoseidonReply)(nil), "trident.PoseidonReply")
 }
 
@@ -85,9 +86,9 @@ const _ = grpc.SupportPackageIsVersion4
 
 type PingPoseidonClient interface {
 	// Sends a greeting
-	GetPoseidon(ctx context.Context, in *HelloPoseidon, opts ...grpc.CallOption) (*PoseidonReply, error)
+	HelloPoseidon(ctx context.Context, in *HelloPoseidonMsg, opts ...grpc.CallOption) (*PoseidonReply, error)
 	// Sends another greeting
-	GetPoseidonAgain(ctx context.Context, in *HelloPoseidon, opts ...grpc.CallOption) (*PoseidonReply, error)
+	HelloPoseidonAgain(ctx context.Context, in *HelloPoseidonMsg, opts ...grpc.CallOption) (*PoseidonReply, error)
 }
 
 type pingPoseidonClient struct {
@@ -98,18 +99,18 @@ func NewPingPoseidonClient(cc *grpc.ClientConn) PingPoseidonClient {
 	return &pingPoseidonClient{cc}
 }
 
-func (c *pingPoseidonClient) GetPoseidon(ctx context.Context, in *HelloPoseidon, opts ...grpc.CallOption) (*PoseidonReply, error) {
+func (c *pingPoseidonClient) HelloPoseidon(ctx context.Context, in *HelloPoseidonMsg, opts ...grpc.CallOption) (*PoseidonReply, error) {
 	out := new(PoseidonReply)
-	err := grpc.Invoke(ctx, "/trident.PingPoseidon/GetPoseidon", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/trident.PingPoseidon/HelloPoseidon", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pingPoseidonClient) GetPoseidonAgain(ctx context.Context, in *HelloPoseidon, opts ...grpc.CallOption) (*PoseidonReply, error) {
+func (c *pingPoseidonClient) HelloPoseidonAgain(ctx context.Context, in *HelloPoseidonMsg, opts ...grpc.CallOption) (*PoseidonReply, error) {
 	out := new(PoseidonReply)
-	err := grpc.Invoke(ctx, "/trident.PingPoseidon/GetPoseidonAgain", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/trident.PingPoseidon/HelloPoseidonAgain", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,47 +121,47 @@ func (c *pingPoseidonClient) GetPoseidonAgain(ctx context.Context, in *HelloPose
 
 type PingPoseidonServer interface {
 	// Sends a greeting
-	GetPoseidon(context.Context, *HelloPoseidon) (*PoseidonReply, error)
+	HelloPoseidon(context.Context, *HelloPoseidonMsg) (*PoseidonReply, error)
 	// Sends another greeting
-	GetPoseidonAgain(context.Context, *HelloPoseidon) (*PoseidonReply, error)
+	HelloPoseidonAgain(context.Context, *HelloPoseidonMsg) (*PoseidonReply, error)
 }
 
 func RegisterPingPoseidonServer(s *grpc.Server, srv PingPoseidonServer) {
 	s.RegisterService(&_PingPoseidon_serviceDesc, srv)
 }
 
-func _PingPoseidon_GetPoseidon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloPoseidon)
+func _PingPoseidon_HelloPoseidon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloPoseidonMsg)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PingPoseidonServer).GetPoseidon(ctx, in)
+		return srv.(PingPoseidonServer).HelloPoseidon(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/trident.PingPoseidon/GetPoseidon",
+		FullMethod: "/trident.PingPoseidon/HelloPoseidon",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingPoseidonServer).GetPoseidon(ctx, req.(*HelloPoseidon))
+		return srv.(PingPoseidonServer).HelloPoseidon(ctx, req.(*HelloPoseidonMsg))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PingPoseidon_GetPoseidonAgain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloPoseidon)
+func _PingPoseidon_HelloPoseidonAgain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloPoseidonMsg)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PingPoseidonServer).GetPoseidonAgain(ctx, in)
+		return srv.(PingPoseidonServer).HelloPoseidonAgain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/trident.PingPoseidon/GetPoseidonAgain",
+		FullMethod: "/trident.PingPoseidon/HelloPoseidonAgain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingPoseidonServer).GetPoseidonAgain(ctx, req.(*HelloPoseidon))
+		return srv.(PingPoseidonServer).HelloPoseidonAgain(ctx, req.(*HelloPoseidonMsg))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -170,12 +171,12 @@ var _PingPoseidon_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*PingPoseidonServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetPoseidon",
-			Handler:    _PingPoseidon_GetPoseidon_Handler,
+			MethodName: "HelloPoseidon",
+			Handler:    _PingPoseidon_HelloPoseidon_Handler,
 		},
 		{
-			MethodName: "GetPoseidonAgain",
-			Handler:    _PingPoseidon_GetPoseidonAgain_Handler,
+			MethodName: "HelloPoseidonAgain",
+			Handler:    _PingPoseidon_HelloPoseidonAgain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -185,18 +186,21 @@ var _PingPoseidon_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("api.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 202 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x2c, 0xc8, 0xd4,
+	// 243 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x2c, 0xc8, 0xd4,
 	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2f, 0x29, 0xca, 0x4c, 0x49, 0xcd, 0x2b, 0x91, 0x92,
 	0x49, 0xcf, 0xcf, 0x4f, 0xcf, 0x49, 0xd5, 0x4f, 0x2c, 0xc8, 0xd4, 0x4f, 0xcc, 0xcb, 0xcb, 0x2f,
-	0x49, 0x2c, 0xc9, 0xcc, 0xcf, 0x2b, 0x86, 0x28, 0x53, 0x52, 0xe6, 0xe2, 0xf5, 0x48, 0xcd, 0xc9,
-	0xc9, 0x0f, 0xc8, 0x2f, 0x4e, 0xcd, 0x4c, 0xc9, 0xcf, 0x13, 0x12, 0xe2, 0x62, 0xc9, 0x4b, 0xcc,
-	0x4d, 0x95, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x02, 0xb3, 0x95, 0x34, 0xb9, 0x78, 0x61, 0xf2,
-	0x41, 0xa9, 0x05, 0x39, 0x95, 0x42, 0x12, 0x5c, 0xec, 0xb9, 0xa9, 0xc5, 0xc5, 0x89, 0xe9, 0x30,
-	0x75, 0x30, 0xae, 0xd1, 0x21, 0x46, 0x2e, 0x9e, 0x80, 0xcc, 0xbc, 0x74, 0xb8, 0x79, 0xc1, 0x5c,
-	0xdc, 0xee, 0xa9, 0x25, 0x70, 0xae, 0x98, 0x1e, 0xd4, 0x5d, 0x7a, 0x28, 0xd6, 0x4a, 0x21, 0xc4,
-	0x51, 0x6c, 0x52, 0x12, 0x69, 0xba, 0xfc, 0x64, 0x32, 0x13, 0x9f, 0x10, 0x8f, 0x7e, 0x3a, 0x92,
-	0x29, 0xb1, 0x5c, 0x02, 0x48, 0x86, 0x3a, 0xa6, 0x27, 0x66, 0x92, 0x6e, 0xb2, 0x24, 0xd8, 0x64,
-	0x61, 0x21, 0x41, 0x64, 0x93, 0xc1, 0x46, 0x25, 0xb1, 0x81, 0xc3, 0xc6, 0x18, 0x10, 0x00, 0x00,
-	0xff, 0xff, 0xc0, 0x81, 0x77, 0xfa, 0x4f, 0x01, 0x00, 0x00,
+	0x49, 0x2c, 0xc9, 0xcc, 0xcf, 0x2b, 0x86, 0x28, 0x93, 0xd2, 0x01, 0x53, 0xc9, 0xba, 0xe9, 0xa9,
+	0x79, 0xba, 0xc5, 0xe5, 0x89, 0xe9, 0xe9, 0xa9, 0x45, 0xfa, 0xf9, 0x05, 0x60, 0x15, 0x98, 0xaa,
+	0x95, 0xd4, 0xb8, 0x04, 0x3c, 0x52, 0x73, 0x72, 0xf2, 0x03, 0xf2, 0x8b, 0x53, 0x33, 0x53, 0xf2,
+	0xf3, 0x7c, 0x8b, 0xd3, 0x85, 0x84, 0xb8, 0x58, 0xf2, 0x12, 0x73, 0x53, 0x25, 0x18, 0x15, 0x18,
+	0x35, 0x38, 0x83, 0xc0, 0x6c, 0x25, 0x4d, 0x2e, 0x5e, 0x98, 0x92, 0xa0, 0xd4, 0x82, 0x9c, 0x4a,
+	0x21, 0x09, 0x2e, 0xf6, 0xdc, 0xd4, 0xe2, 0xe2, 0xc4, 0x74, 0x98, 0x3a, 0x18, 0xd7, 0xe8, 0x0e,
+	0x23, 0x17, 0x4f, 0x40, 0x66, 0x5e, 0x3a, 0x4c, 0xbd, 0x50, 0x02, 0x17, 0x2f, 0x8a, 0x1d, 0x42,
+	0x92, 0x7a, 0x50, 0xaf, 0xe8, 0xa1, 0xdb, 0x2d, 0x25, 0x06, 0x97, 0x42, 0xb1, 0x4e, 0x49, 0xa6,
+	0xe9, 0xf2, 0x93, 0xc9, 0x4c, 0x62, 0x4a, 0x82, 0xfa, 0x65, 0x86, 0xfa, 0x19, 0x20, 0x5d, 0x05,
+	0x50, 0x79, 0x2b, 0x46, 0x2d, 0xa1, 0x2c, 0x2e, 0x21, 0x14, 0x93, 0x1c, 0xd3, 0x13, 0x33, 0xc9,
+	0xb2, 0x46, 0x11, 0x6c, 0x8d, 0xb4, 0x92, 0x18, 0x86, 0x35, 0x89, 0x20, 0x23, 0xad, 0x18, 0xb5,
+	0x92, 0xd8, 0xc0, 0x01, 0x67, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x76, 0x7e, 0x37, 0x5f, 0x9a,
+	0x01, 0x00, 0x00,
 }

@@ -18,20 +18,22 @@ variables:
   REGISTRY_ORG: samsung_cnct
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_DRIVER: overlay2
-  PROTOC_IMAGE: registry.cnct.io/team-nes/grpc-example/rootfs/golang-protoc
+  PROTOC_IMAGE: registry.cnct.io/common-tools/samsung-cnct_sample-grpc-apiserver/golang-protoc:latest
 
 stages:
   - build
+  - test
   - docker
   - helm
   - deploy
   - github-status-update
 
 before_script:
-  #- helm registry login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
   - export CHART_VER=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
   - export CHART_REL=$(git rev-list --count v${CHART_VER}..HEAD 2>/dev/null )
-  # - docker info
+  - mkdir -p /go/src/github.com/samsung-cnct
+  - ln -s /common-tools/samsung-cnct_sample-grpc-apiserver /go/src/github.com/samsung-cnct/sample-grpc-apiserver
+  - cd /go/src/github.com/samsung-cnct/sample-grpc-apiserver
 
 build:
   stage: build
@@ -40,33 +42,23 @@ build:
     paths:
     - ${CHART_NAME}
   script:
-    - go get -u google.golang.org/grpc
-    - go get -u github.com/golang/protobuf/protoc-gen-go
-    - go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
-    - protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --go_out=plugins=grpc:api
-    - protoc -I api/ api/api.proto -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --grpc-gateway_out=logtostderr=true:api
+    - ./bin/gen_apis.sh
     - go build -o rootfs/grpc_server/server ./server
     - go build -o rootfs/grpc_server/client ./client
   artifacts:
     untracked: true
-    
+
 unit-tests:
-  stage: build
+  stage: test
   image: $PROTOC_IMAGE
   script:
-    - go test server/*test.go
-    - go test client/*test.go
+    - ./bin/test.sh -v
 
 generate_docs:
   stage: build
   image: $PROTOC_IMAGE
   script:
-    - go get -u google.golang.org/grpc
-    - go get -u github.com/golang/protobuf/protoc-gen-go
-    - go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
-    - go get -u github.com/pseudomuto/protoc-gen-doc/cmd/...
-    - cd /common-tools/samsung-cnct_sample-grpc-apiserver
-    - protoc --plugin=protoc-gen-doc=/go/bin/protoc-gen-doc -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --proto_path api/  --doc_out=markdown,api.md:docs api/*.proto
+    - ./bin/gen_apis.sh
   artifacts:
     untracked: true
     paths: 
@@ -105,18 +97,3 @@ helm_lint:
   script:
     - cd charts/grpc
     - helm lint
-
-
-#"report-status":
-#  "after_script":
-#  - "curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 30}\" || true"
-#  - "curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 150}\" || true"
-#  "before_script": []
-#  "image": "python:2.7"
-#  "script":
-#  - "echo curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 30}\" || true"
-#  - "echo curl -XPOST https://failfast.ci.cnct.io//api/v1/github_statuses -d \"{\\\"ci_project_id\\\": \\\"$CI_PROJECT_ID\\\", \\\"ci_sha\\\": \\\"$CI_BUILD_REF\\\", \\\"sha\\\": \\\"$SHA\\\", \\\"ci_ref\\\": \\\"$CI_COMMIT_REF_NAME\\\", \\\"github_repo\\\": \\\"$GITHUB_REPO\\\", \\\"installation_id\\\": \\\"$GITHUB_INSTALLATION_ID\\\", \\\"delay\\\": 150}\" || true"
-#  "stage": "github-status-update"
-#  "tags":
-#  - "failfast-ci"
-#  "when": "always"

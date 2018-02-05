@@ -1,0 +1,93 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/helloposeidon": {
+      "post": {
+        "summary": "Sends a greeting",
+        "operationId": "HelloPoseidon",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/tridentPoseidonReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tridentHelloPoseidonMsg"
+            }
+          }
+        ],
+        "tags": [
+          "PingPoseidon"
+        ]
+      }
+    },
+    "/v1/helloposeidonagain": {
+      "post": {
+        "summary": "Sends another greeting",
+        "operationId": "HelloPoseidonAgain",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/tridentPoseidonReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tridentHelloPoseidonMsg"
+            }
+          }
+        ],
+        "tags": [
+          "PingPoseidon"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "tridentHelloPoseidonMsg": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "description": "The request message containing the user's name."
+    },
+    "tridentPoseidonReply": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "The response message containing the greetings"
+    }
+  }
+}

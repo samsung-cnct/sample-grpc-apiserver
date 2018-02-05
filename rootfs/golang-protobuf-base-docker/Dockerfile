@@ -1,8 +1,7 @@
-FROM golang:1.9-alpine
-ENV PROTOBUF_TAG=v3.1.0
+FROM golang:1.9
+ENV PROTOBUF_TAG=v3.5.1
 ADD build.sh /tmp/build.sh
 RUN chmod +x /tmp/build.sh \
+    && apt-get update \
+    && apt-get upgrade -y \
     && /tmp/build.sh \
-    && /tmp/build.sh \
-    && apk update \
-    && apk add git
