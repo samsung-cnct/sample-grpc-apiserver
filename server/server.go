@@ -46,8 +46,7 @@ func (s *server) HelloPoseidonAgain(ctx context.Context, in *pb.HelloPoseidonMsg
 	return &pb.PoseidonReply{Message: "Hello again " + in.Name}, nil
 }
 
-
-func startServer(addr string, gracefulStop chan os.Signal)  error {
+func startServer(addr string, gracefulStop chan os.Signal) error {
 	var err error
 	log.Print("starting server")
 

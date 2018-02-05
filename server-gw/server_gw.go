@@ -87,7 +87,6 @@ func serveSwagger(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, p)
 }
 
-
 func main() {
 	ctx := context.Background()
 	_, cancel := context.WithCancel(ctx)
