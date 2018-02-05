@@ -20,46 +20,40 @@ package main
 
 import (
 	"log"
-	"net"
+	"net/http"
 	"os"
 	"os/signal"
+	"path"
+	"strings"
 	"syscall"
 	"time"
 
 	"fmt"
 
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/samsung-cnct/sample-grpc-apiserver/api"
 	c "github.com/samsung-cnct/sample-grpc-apiserver/configs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
-// server is used to implement helloworld.GreeterServer.
-type server struct{}
-
-// GetPoseidon implements helloworld.GreeterServer
-func (s *server) HelloPoseidon(ctx context.Context, in *pb.HelloPoseidonMsg) (*pb.PoseidonReply, error) {
-	return &pb.PoseidonReply{Message: "Hello " + in.Name}, nil
-}
-
-func (s *server) HelloPoseidonAgain(ctx context.Context, in *pb.HelloPoseidonMsg) (*pb.PoseidonReply, error) {
-	return &pb.PoseidonReply{Message: "Hello again " + in.Name}, nil
-}
-
-
-func startServer(addr string, gracefulStop chan os.Signal)  error {
+func startServerGW(addr string, gracefulStop chan os.Signal) error {
 	var err error
-	log.Print("starting server")
+	ctx := context.Background()
+	log.Print("starting rest-gateway server...")
 
-	listener, err := net.Listen("tcp", addr)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/swagger/", serveSwagger)
+
+	muxGateway := runtime.NewServeMux()
+
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+	err = pb.RegisterPingPoseidonHandlerFromEndpoint(ctx, muxGateway, addr, opts)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		return err
 	}
 
-	var opts []grpc.ServerOption
-
-	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterPingPoseidonServer(grpcServer, &server{})
+	mux.Handle("/", muxGateway)
 
 	// Chance here to gracefully handle being stopped.
 	go func() {
@@ -67,15 +61,32 @@ func startServer(addr string, gracefulStop chan os.Signal)  error {
 		log.Printf("caught sig: %+v", sig)
 		log.Println("waiting for 2 second to finish processing")
 		time.Sleep(2 * time.Second)
-		grpcServer.Stop()
-		log.Print("server terminated")
+		log.Print("rest-gateway server terminated")
 		os.Exit(0)
 	}()
 
-	log.Printf("attempting to start server in address: %s", addr)
+	log.Printf("attempting to start rest-gateway server in address: %s", addr)
 
-	return grpcServer.Serve(listener)
+	return http.ListenAndServe(addr, mux)
+
 }
+
+func serveSwagger(w http.ResponseWriter, r *http.Request) {
+	log.Printf("call to find swagger resource.... %s", r.URL.Path)
+	if !strings.HasSuffix(r.URL.Path, ".swagger.json") {
+		log.Printf("Not a swagger file %s, missing suffix .swagger.json", r.URL.Path)
+		http.NotFound(w, r)
+		return
+	}
+
+	gwSwaggerDir := c.ParseGWSwaggerEnvVars()
+
+	log.Printf("Serving %s", r.URL.Path)
+	p := strings.TrimPrefix(r.URL.Path, "/swagger/")
+	p = path.Join(gwSwaggerDir, p)
+	http.ServeFile(w, r, p)
+}
+
 
 func main() {
 	ctx := context.Background()
@@ -87,16 +98,17 @@ func main() {
 		log.Fatalf("failed to init config vars: %s", err)
 	}
 
-	_, port, _, address := c.ParseGateWayEnvVars()
+	gwPort, _, gwAddress, _ := c.ParseGateWayEnvVars()
 
 	//  Get notified that server is being asked to stop
 	// Handle SIGINT and SIGTERM.
 	gracefulStop := make(chan os.Signal)
 	signal.Notify(gracefulStop, syscall.SIGINT, syscall.SIGTERM)
 
-	// Server Code
-	err = startServer(fmt.Sprintf("%s:%d", address, port), gracefulStop)
+	// Server Gateway Code
+	err = startServerGW(fmt.Sprintf("%s:%d", gwAddress, gwPort), gracefulStop)
 	if err != nil {
-		log.Fatalf("failed to start server: %s", err)
+		log.Fatalf("failed to start rest-gateway server: %s", err)
 	}
+
 }
